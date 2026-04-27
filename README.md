@@ -17,3 +17,12 @@ cp terraform.tfvars.example terraform.tfvars
 
 # Edit with your values
 vim terraform.tfvars
+
+# Initialize Terraform
+terraform init
+
+# Review changes
+terraform plan
+
+# Apply configuration
+terraform apply -auto-approve
