@@ -1,0 +1,90 @@
+# ==============================================================================
+# SAMPLE CONFIGURATION FILE
+# Copy this file to terraform.tfvars and modify as needed
+# ==============================================================================
+
+# ==============================================================================
+# RESOURCE GROUP SETTINGS
+# ==============================================================================
+
+resource_group_name = "my-production-networking-rg"
+location           = "East US"
+
+# ==============================================================================
+# VIRTUAL NETWORK SETTINGS
+# ==============================================================================
+
+vnet_config = {
+  name          = "main-production-vnet"
+  address_space = ["10.0.0.0/16"]
+}
+
+# ==============================================================================
+# SUBNET SETTINGS
+# ==============================================================================
+
+subnet_configs = {
+  # Web Application Subnet
+  "web-subnet" = {
+    address_prefixes  = ["10.0.1.0/24"]
+    service_endpoints = ["Microsoft.Storage", "Microsoft.Sql"]
+  }
+  
+  # Application Server Subnet
+  "app-subnet" = {
+    address_prefixes  = ["10.0.2.0/24"]
+    service_endpoints = ["Microsoft.Storage"]
+  }
+  
+  # Database Subnet
+  "db-subnet" = {
+    address_prefixes  = ["10.0.3.0/24"]
+    service_endpoints = ["Microsoft.Sql"]
+  }
+  
+  # Management Subnet
+  "management-subnet" = {
+    address_prefixes  = ["10.0.4.0/24"]
+    service_endpoints = []
+  }
+  
+  # Azure Bastion Subnet (special name required)
+  "AzureBastionSubnet" = {
+    address_prefixes  = ["10.0.5.0/27"]
+    service_endpoints = []
+  }
+  
+  # VPN Gateway Subnet (special name required)
+  "GatewaySubnet" = {
+    address_prefixes  = ["10.0.6.0/27"]
+    service_endpoints = []
+  }
+  
+  # AKS Cluster Subnet with Delegation
+  "aks-subnet" = {
+    address_prefixes  = ["10.0.7.0/22"]
+    service_endpoints = ["Microsoft.Storage"]
+    delegation = {
+      "aks-delegation" = {
+        name = "aks-delegation"
+        service_delegation = {
+          name    = "Microsoft.ContainerService/managedClusters"
+          actions = ["Microsoft.Network/virtualNetworks/subnets/join/action"]
+        }
+      }
+    }
+  }
+}
+
+# ==============================================================================
+# TAGS SETTINGS
+# ==============================================================================
+
+tags = {
+  Environment     = "Production"
+  ManagedBy       = "Terraform"
+  Project         = "Infrastructure"
+  CostCenter      = "IT-Operations"
+  Owner           = "Network-Team"
+  ProvisioningDate = "2024-01-01"
+}
